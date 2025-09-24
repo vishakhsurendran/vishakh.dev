@@ -1,0 +1,298 @@
+/* Theme variables and fonts */
+:root{
+  /* Color palette */
+  --bg-start: #0b1220;
+  --bg-mid: #141824;
+  --bg: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-mid) 100%);
+  --card-bg: rgba(255,255,255,0.02);
+  --text: #e7eef8;
+  --muted: rgba(231,238,248,0.62);
+  --accent: #c79a63;
+  --accent-strong: linear-gradient(90deg,#c79a63,#a56a3f);
+  --shadow: 0 16px 40px rgba(3,7,18,0.6);
+  --radius: 12px;
+  --nav-height: 64px;
+  
+  /* Transitions */
+  --transition-duration: 260ms;
+  --transition-fast: 160ms;
+  --transition-easing: cubic-bezier(.2,.8,.2,1);
+  --bg-fade-duration: 420ms;
+  --bg-dark: linear-gradient(180deg, #0b1220 0%, #141824 100%);
+  --bg-light: linear-gradient(180deg, #f7fafc 0%, #eef2ff 100%);
+}
+
+/* Theme switching helper */
+.theme-switching,
+.theme-switching * {
+  transition: background-color var(--transition-duration) var(--transition-easing),
+              color var(--transition-duration) var(--transition-easing),
+              transform var(--transition-fast) var(--transition-easing),
+              box-shadow var(--transition-duration) var(--transition-easing) !important;
+  will-change: background-color, color, transform, box-shadow;
+}
+
+/* Disable transitions for users with reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  :root, html, body, .theme-switching, .theme-switching * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Load chosen font: Fira Code */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;700&display=swap');
+
+/* Base */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
+  /* Background is provided by pseudo-elements to enable smooth crossfades. */
+  background: none;
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  /* Use the tuned transition variables for consistent, smoother animation */
+  transition: color var(--transition-duration) var(--transition-easing);
+  position:relative; /* establish stacking context for pseudo backgrounds */
+}
+
+/* Background layers that crossfade. Using pseudo-elements avoids animating background-image directly. */
+body::before,
+body::after{
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  will-change: opacity;
+  transition: opacity var(--bg-fade-duration) var(--transition-easing);
+}
+
+/* dark layer (default visible) */
+body::before{
+  background: var(--bg-dark);
+  opacity: 1;
+}
+
+/* light layer (fades in when light theme active) */
+body::after{
+  background: var(--bg-light);
+  opacity: 0;
+}
+
+/* When light theme is active, crossfade the two layers */
+/* We actually toggle based on the attribute on documentElement */
+[data-theme="light"] body::before{ opacity: 0; }
+[data-theme="light"] body::after{ opacity: 1; }
+
+/* Site navigation layout */
+.site-nav{
+  position:relative;
+  height:var(--nav-height);
+  display:block;
+  background: transparent;
+  padding:0 20px;
+}
+.site-nav .container{
+  display:grid;
+  grid-template-columns: min-content 1fr min-content;
+  align-items:center;
+  gap:16px;
+  max-width:1100px;
+  margin:0 auto;
+  padding:6px 12px; /* lowered brand slightly from top */
+}
+
+/* Site brand sits at the top left */
+.site-brand{ grid-column: 1 / 2; display:flex; align-items:center; gap:10px; color:var(--text); text-decoration:none; font-weight:700; z-index:10; margin-top:4px; }
+
+/* Centering navigational links */
+.site-links-center{
+  grid-column: 2 / 3;
+  justify-self:center;
+  display:flex;
+  gap:18px;
+  align-items:center;
+  z-index:5;
+  transform: translateX(-17%);
+}
+.site-links-center a{
+  color:var(--muted);
+  text-decoration:none;
+  font-weight:600;
+  letter-spacing:0.2px;
+  padding:6px 4px;
+  transition: color 220ms ease, transform 220ms var(--transition-easing);
+}
+.site-links-center a:hover,
+.site-links-center a[aria-current="page"]{
+  color:var(--text);
+  transform: translateY(-2px);
+}
+
+/* Set Light/Dark mode toggle to right top of page */
+.nav-right{ grid-column: 3 / 4; justify-self:end; z-index:10; }
+
+/* Prevent overlapping */
+.site-brand, .nav-right { min-width: 52px; }
+
+/* Home layout */
+.home-center{
+  min-height: calc(100vh - var(--nav-height));
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  text-align:center;
+  padding-top:6vh; 
+}
+
+.home-center{
+  min-height: calc(100vh - var(--nav-height));
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:18px;
+  text-align:center;
+  padding-top:6vh;
+}
+
+.home-center h1{ margin:0; font-size:2.2rem; font-weight:700; color:var(--text); }
+.lead{ margin:0; color:var(--muted); max-width:760px; }
+
+.home-actions{ display:flex; gap:18px; flex-wrap:wrap; margin-top:10px; justify-content:center; align-items:center; }
+
+/* Button formatting */
+.contact-btn{
+  border-radius:10px;           
+  padding:12px 20px;            
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  font-weight:700;
+  border:1px solid rgba(255,255,255,0.06);
+  text-decoration:none;
+  transition: transform 240ms cubic-bezier(.2,.8,.2,1), box-shadow 240ms cubic-bezier(.2,.8,.2,1), background 240ms ease;
+}
+.contact-btn.primary{
+  background: var(--accent-strong);
+  color: #fff;
+  border: none;
+  box-shadow: 0 12px 30px rgba(3,7,18,0.28);
+}
+.contact-btn:hover, .contact-btn:focus{
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 18px 40px rgba(3,7,18,0.32);
+}
+
+/* Social icons */
+.home-socials{ display:flex; gap:18px; margin-top:6px; align-items:center; justify-content:center; }
+
+/* Project card formatting */
+.project-cards{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap:26px;
+  align-items:start;
+  margin-top:28px;
+  padding-bottom:40px;
+  justify-content:center;
+}
+.project-link{ display:block; color:inherit; text-decoration:none; }
+.project-card{
+  max-width:760px;
+  width:100%;
+  padding:28px;
+  min-height: 220px;      
+  border-radius:14px;
+  background: var(--card-bg);
+  border:1px solid rgba(255,255,255,0.03);
+  box-shadow:var(--shadow);
+  transition: transform var(--transition-duration) var(--transition-easing), box-shadow var(--transition-duration) var(--transition-easing), background 320ms ease;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+.project-card h3{ margin:0; color:var(--accent); font-size:1.15rem; }
+.project-card p{ margin:0; color:var(--muted); font-size:0.98rem; }
+
+.page-header h2{ margin:0; font-size:1.6rem; color:var(--text); }
+.page-header p{ margin:8px 0 0; color:var(--muted); }
+
+.icon-btn{ color:var(--muted); background:transparent; border:none; cursor:pointer; padding:8px; border-radius:8px; }
+.icon-btn svg{ width:20px; height:20px; display:block; color:inherit; }
+
+.project-card:hover, .project-card:focus-within{ transform: translateZ(0) scale(1.015); box-shadow: 0 30px 60px rgba(3,7,18,0.5); }
+
+/* About/Contact pages */
+.container--center{ display:flex; align-items:flex-start; justify-content:center; min-height: calc(100vh - var(--nav-height)); padding-top:7vh; padding-bottom:7vh; }
+.content-card{ max-width:760px; text-align:center; padding:28px; background:transparent; box-shadow:none; border:none; }
+
+.contact-actions{ display:flex; gap:14px; justify-content:center; margin-top:18px; flex-wrap:wrap; }
+
+/* Light theme */
+[data-theme="light"]{
+  --bg-start: #f7fafc;
+  --bg-mid: #eef2ff;
+  --bg: linear-gradient(180deg, var(--bg-start) 0%, var(--bg-mid) 100%);
+  --card-bg: rgba(10,14,22,0.03);
+  --text: #0b1220;
+  --muted: rgba(11,18,32,0.66);
+  --accent: #1f6feb;
+  --accent-strong: linear-gradient(90deg,#1f6feb,#0ea5a0);
+  --shadow: 0 10px 30px rgba(2,6,23,0.06);
+}
+
+/* Leave room for footer at the bottom of the page */
+.container{
+  padding-bottom: 110px; 
+}
+
+/* Footer */
+.site-footer{
+  position:fixed;
+  left:50%;
+  bottom:18px;
+  transform:translateX(-50%);
+  display:flex;
+  gap:14px;
+  align-items:center;
+  background: rgba(255,255,255,0.03);
+  padding:8px 12px;
+  border-radius:999px;
+  box-shadow: 0 10px 30px rgba(2,6,23,0.35);
+  z-index:90;
+  backdrop-filter: blur(6px);
+  transition: transform 260ms var(--transition), opacity 260ms var(--transition);
+}
+.site-footer a{ color:var(--text); text-decoration:none; display:inline-flex; align-items:center; justify-content:center; }
+.site-footer .social-icon{ width:22px; height:22px; color:var(--text); opacity:0.95; transition: transform 220ms var(--transition-easing), color 220ms var(--transition-easing); }
+.site-footer a:hover .social-icon{ transform: translateY(-4px) scale(1.05); color:var(--accent); }
+
+/* Project grid */
+.project-cards{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 420px));
+  gap:22px;
+  align-items:start;
+  margin-top:28px;
+  padding-bottom:40px;
+  justify-content:center;
+}
+.project-card{
+  padding:20px;
+  min-height:180px;
+  max-width:520px;
+}
+
+/* Maintain small footer */
+@media (max-width:480px){
+  .site-footer{ bottom:12px; padding:6px 8px; gap:10px; }
+  .site-footer .social-icon{ width:20px; height:20px; }
+  .container{ padding-bottom:90px; }
+}
