@@ -12,7 +12,7 @@
   --shadow: 0 16px 40px rgba(3,7,18,0.6);
   --radius: 12px;
   --nav-height: 64px;
-  
+
   /* Transitions */
   --transition-duration: 260ms;
   --transition-fast: 160ms;
@@ -49,17 +49,15 @@ html,body{height:100%}
 body{
   margin:0;
   font-family: 'Fira Code', ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", "Courier New", monospace;
-  /* Background is provided by pseudo-elements to enable smooth crossfades. */
   background: none;
   color:var(--text);
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
-  /* Use the tuned transition variables for consistent, smoother animation */
   transition: color var(--transition-duration) var(--transition-easing);
-  position:relative; /* establish stacking context for pseudo backgrounds */
+  position:relative;
 }
 
-/* Background layers that crossfade. Using pseudo-elements avoids animating background-image directly. */
+/* Background layers which crossfade. */
 body::before,
 body::after{
   content: '';
@@ -84,7 +82,6 @@ body::after{
 }
 
 /* When light theme is active, crossfade the two layers */
-/* We actually toggle based on the attribute on documentElement */
 [data-theme="light"] body::before{ opacity: 0; }
 [data-theme="light"] body::after{ opacity: 1; }
 
@@ -106,7 +103,7 @@ body::after{
   padding:6px 12px; /* lowered brand slightly from top */
 }
 
-/* Site brand sits at the top left */
+/* Site brand at the top left */
 .site-brand{ grid-column: 1 / 2; display:flex; align-items:center; gap:10px; color:var(--text); text-decoration:none; font-weight:700; z-index:10; margin-top:4px; }
 
 /* Centering navigational links */
@@ -295,4 +292,54 @@ body::after{
   .site-footer{ bottom:12px; padding:6px 8px; gap:10px; }
   .site-footer .social-icon{ width:20px; height:20px; }
   .container{ padding-bottom:90px; }
+}
+
+/* Mobile navigation settings to prevent overlap */
+@media (max-width:720px) {
+  .site-nav .container{
+    grid-template-columns: auto 1fr min-content;
+    gap:8px;
+    padding:6px 10px;
+  }
+
+  /* Reduce brand top offset on smaller screens */
+  .site-brand{ margin-top:0; }
+
+  /* Hide center links by default; Display as a dropdown when toggled */
+  .site-links-center{
+    position: absolute;
+    left: 8px;
+    right: 8px;
+    top: calc(var(--nav-height) + 8px);
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    padding:10px 12px;
+    background: var(--card-bg);
+    border-radius: 12px;
+    border:1px solid rgba(255,255,255,0.04);
+    box-shadow: var(--shadow);
+    justify-self: stretch;
+    transform: translateY(-6px) scale(.995);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 260ms var(--transition-easing), transform 260ms var(--transition-easing);
+    z-index: 80;
+  }
+
+  .site-links-center a{ padding:8px 10px; display:block; }
+
+  /* Menu toggle button */
+  .menu-toggle{ display:inline-flex; align-items:center; justify-content:center; background:transparent; border:none; color:var(--muted); padding:8px; border-radius:8px; cursor:pointer; }
+  .menu-toggle svg{ width:20px; height:20px; }
+
+  /* Show the dropdown when menu is open */
+  .menu-open .site-links-center{
+    transform:none;
+    opacity:1;
+    pointer-events:auto;
+  }
+
+  /* Maintain theme toggle at the right */
+  .nav-right{ z-index:90; }
 }
