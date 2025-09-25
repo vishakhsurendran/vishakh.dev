@@ -50,60 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Menu for smaller screens
-  const ensureMobileMenu = () => {
-    if (document.querySelector('.menu-toggle')) return; 
-
-    const toggle = document.createElement('button');
-    toggle.type = 'button';
-    toggle.className = 'menu-toggle';
-    toggle.setAttribute('aria-expanded', 'false');
-    toggle.setAttribute('aria-label', 'Open menu');
-    toggle.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>';
-
-    // insert before the right-side controls so it sits left of the theme toggle
-    const navContainer = document.querySelector('.site-nav .container');
-    if (navContainer) {
-      navContainer.insertBefore(toggle, navContainer.querySelector('.nav-right'));
-    }
-
-    const closeMenu = () => {
-      document.documentElement.classList.remove('menu-open');
-      toggle.setAttribute('aria-expanded', 'false');
-      toggle.setAttribute('aria-label', 'Open menu');
-    };
-
-    const openMenu = () => {
-      document.documentElement.classList.add('menu-open');
-      toggle.setAttribute('aria-expanded', 'true');
-      toggle.setAttribute('aria-label', 'Close menu');
-    };
-
-    toggle.addEventListener('click', (e) => {
-      e.stopPropagation();
-      if (document.documentElement.classList.contains('menu-open')) closeMenu();
-      else openMenu();
-    });
-
-    // Close menu after a link is clicked
-    document.querySelectorAll('.site-links-center a').forEach(a => a.addEventListener('click', () => closeMenu()));
-
-    // If outside area of the menu is tapped, close menu
-    document.addEventListener('click', (e) => {
-      if (!document.documentElement.classList.contains('menu-open')) return;
-      const withinNav = e.target.closest('.site-nav');
-      if (!withinNav) closeMenu();
-    });
-  };
-
-  // Initialize on load and also on resize to ensure toggle exists on mobile widths
-  ensureMobileMenu();
-  window.addEventListener('resize', () => {
-    // If width gets larger, remove menu-open
-    if (window.innerWidth > 720) document.documentElement.classList.remove('menu-open');
-    ensureMobileMenu();
-  });
-
   // Prefetch optimization
   const prefetchLinks = document.querySelectorAll('a[data-prefetch]');
   prefetchLinks.forEach(a => {

@@ -307,27 +307,23 @@ body::after{
 
   /* Hide center links by default; Display as a dropdown when toggled */
   .site-links-center{
-    position: absolute;
-    left: 8px;
-    right: 8px;
-    top: calc(var(--nav-height) + 8px);
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-    padding:10px 12px;
-    background: var(--card-bg);
-    border-radius: 12px;
-    border:1px solid rgba(255,255,255,0.04);
-    box-shadow: var(--shadow);
-    justify-self: stretch;
-    transform: translateY(-6px) scale(.995);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 260ms var(--transition-easing), transform 260ms var(--transition-easing);
-    z-index: 80;
+    justify-content: center;
+    flex-wrap: wrap;   /* allow links to wrap to next line if screen is narrow */
+    transform: none;   /* remove transforms for dropdown */
+    opacity: 1;
+    pointer-events: auto;
+    position: static;  /* remove absolute positioning */
+    gap: 12px;
   }
 
-  .site-links-center a{ padding:8px 10px; display:block; }
+  .site-links-center a {
+    padding: 6px 10px;
+    display: inline-block;
+  }
+
+  .nav-right {
+    z-index: 10;
+  }
 
   /* Menu toggle button */
   .menu-toggle{ display:inline-flex; align-items:center; justify-content:center; background:transparent; border:none; color:var(--muted); padding:8px; border-radius:8px; cursor:pointer; }
