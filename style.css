@@ -313,21 +313,21 @@ body::after{
 /* Mobile navigation settings */
 @media (max-width:720px) {
   .site-nav .container{
-    grid-template-columns: auto 1fr auto; /* brand left, spacer, right controls */
+    grid-template-columns: auto 1fr auto; 
     gap:8px;
     padding:6px 12px;
   }
 
   .site-brand{ margin-top:0; }
 
-  /* mobile drop-down centered and opaque so text behind doesn't show through */
+  /* mobile drop-down centered and opaque */
   .site-links-center{
     position: absolute;
     top: var(--nav-height);
     left: 50%;
     transform: translate(-50%, -120%);
     width: min(94%, 420px);
-    background: rgba(6,10,18,0.96); /* darker, nearly-opaque background for mobile */
+    background: rgba(6,10,18,0.96); 
     flex-direction: column;
     gap:12px;
     padding:12px;
@@ -364,7 +364,7 @@ body::after{
     pointer-events:auto;
   }
 
-  /* show the menu toggle only on mobile (desktop remains unaffected) */
+  /* show the menu toggle only on mobile */
   .menu-toggle{
     display:inline-flex;
     align-items:center;
@@ -384,4 +384,31 @@ body::after{
 
   /* ensure the theme toggle remains visible and clickable at the right on mobile */
   .nav-right{ display:flex; }
+}
+
+@media (min-width: 721px) {
+  .site-nav .container {
+    position: relative;
+  }
+
+  /* Center middle links */
+  .site-links-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  /* Maintain brand on left and theme toggle on right */
+  .site-brand { justify-self: start; }
+  .nav-right { justify-self: end; display: flex; align-items: center; }
+
+  /* Hide the mobile menu button on desktop */
+  .menu-toggle {
+    display: none !important;
+    width: auto;
+    height: auto;
+  }
 }

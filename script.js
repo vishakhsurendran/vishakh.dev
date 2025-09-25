@@ -43,8 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // --- Mobile hamburger menu creation & behavior ---
-  // Only create the hamburger on pages other than home
+  // Mobile menu creation & behavior
+  // Only create the menu on pages other than home
   const isHome = (pathname => {
     if (!pathname) return true;
     const p = pathname.replace(/\/+$/, '');
@@ -53,7 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Do not create the menu toggle on the homepage
   if (!isHome) {
-    // create once if not present
     if (!document.querySelector('.menu-toggle')) {
       const menuToggle = document.createElement('button');
       menuToggle.type = 'button';
@@ -61,10 +60,10 @@ document.addEventListener('DOMContentLoaded', () => {
       menuToggle.setAttribute('aria-label', 'Open menu');
       menuToggle.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>';
 
-      // Prefer placing the toggle inside .nav-right so it lines up with theme toggle
+      // Place the toggle inside .nav-right so it lines up with theme toggle
       const navRight = document.querySelector('.site-nav .nav-right');
       if (navRight) {
-        navRight.appendChild(menuToggle);
+        navRight.insertBefore(menuToggle, navRight.firstElementChild);
       } else {
         // fallback: append to container end
         const navContainer = document.querySelector('.site-nav .container');
@@ -86,19 +85,19 @@ document.addEventListener('DOMContentLoaded', () => {
         else openMenu();
       });
 
-      // Close menu when clicking any nav link or theme toggle inside the mobile menu
+      // Close menu when clicking any link or theme toggle inside the mobile menu
       document.querySelectorAll('.site-links-center a, .site-links-center .icon-btn').forEach(el=>{
         el.addEventListener('click', closeMenu);
       });
 
-      // Close when tapping outside the nav while open
+      // Close when tapping outside the menu while open
       document.addEventListener('click', (e)=>{
         if (!document.documentElement.classList.contains('menu-open')) return;
         const withinNav = e.target.closest('.site-nav');
         if (!withinNav) closeMenu();
       });
 
-      // Ensure we remove the menu-open class on navigation (single-page or external)
+      // Remove the menu-open class on navigation (single-page or external)
       window.addEventListener('hashchange', () => document.documentElement.classList.remove('menu-open'));
     }
   }
